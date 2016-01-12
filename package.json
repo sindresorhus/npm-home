@@ -1,6 +1,6 @@
 {
   "name": "npm-home",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Open the npm page of the package in the current directory",
   "license": "MIT",
   "repository": "sindresorhus/npm-home",
