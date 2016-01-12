@@ -1,0 +1,51 @@
+{
+  "name": "npm-home",
+  "version": "0.0.0",
+  "description": "Open the npm page of the package in the current directory",
+  "license": "MIT",
+  "repository": "sindresorhus/npm-home",
+  "author": {
+    "name": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com"
+  },
+  "bin": {
+    "npm-home": "cli.js",
+    "nh": "cli.js"
+  },
+  "engines": {
+    "node": ">=4"
+  },
+  "scripts": {
+    "test": "xo && ava"
+  },
+  "files": [
+    "cli.js"
+  ],
+  "keywords": [
+    "cli-app",
+    "cli",
+    "npm",
+    "package",
+    "pkg",
+    "page",
+    "home",
+    "open",
+    "cwd",
+    "current",
+    "directory"
+  ],
+  "dependencies": {
+    "meow": "^3.7.0",
+    "opn": "^3.0.3",
+    "read-pkg-up": "^1.0.1"
+  },
+  "devDependencies": {
+    "ava": "*",
+    "execa": "^0.2.2",
+    "xo": "*"
+  },
+  "xo": {
+    "esnext": true
+  }
+}
