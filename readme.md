@@ -1,6 +1,6 @@
 # npm-home [![Build Status](https://travis-ci.org/sindresorhus/npm-home.svg?branch=master)](https://travis-ci.org/sindresorhus/npm-home)
 
-> Open the npm page of the package in the current directory
+> Open the npm page of a package
 
 
 ## Install
@@ -16,8 +16,12 @@ $ npm install --global npm-home
 $ npm-home --help
 
   Usage
+    $ npm-home [name]
+    $ nh [name]
+
+  Examples
     $ npm-home
-    $ nh
+    $ npm-home chalk
 ```
 
 

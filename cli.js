@@ -4,12 +4,22 @@ const meow = require('meow');
 const readPkgUp = require('read-pkg-up');
 const opn = require('opn');
 
-meow(`
+const cli = meow(`
 	Usage
+	  $ npm-home [name]
+	  $ nh [name]
+
+	Examples
 	  $ npm-home
-	  $ nh
+	  $ npm-home chalk
 `);
 
-readPkgUp().then(result => {
-	opn(`https://www.npmjs.com/package/${result.pkg.name}`, {wait: false});
-});
+function open(name) {
+	opn(`https://www.npmjs.com/package/${name}`, {wait: false});
+}
+
+if (cli.input.length > 0) {
+	open(cli.input[0]);
+} else {
+	readPkgUp().then(x => open(x.pkg.name));
+}
