@@ -37,7 +37,7 @@
   ],
   "dependencies": {
     "meow": "^3.7.0",
-    "opn": "^3.0.3",
+    "opn": "^4.0.1",
     "read-pkg-up": "^1.0.1"
   },
   "devDependencies": {
