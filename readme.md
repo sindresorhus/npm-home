@@ -1,6 +1,6 @@
 # npm-home [![Build Status](https://travis-ci.org/sindresorhus/npm-home.svg?branch=master)](https://travis-ci.org/sindresorhus/npm-home)
 
-> Open the npm page of a package
+> Open the npm page or GitHub repo of a package
 
 
 ## Install
@@ -19,15 +19,18 @@ $ npm-home --help
     $ npm-home [name]
     $ nh [name]
 
+  Options
+    --github -g  Open the GitHub repo of the package
+
   Examples
     $ npm-home
-    $ npm-home chalk
+    $ npm-home chalk -g
 ```
 
 
 ## Related
 
-- [gh-home](https://github.com/sindresorhus/gh-home) - Open the GitHub page of the repo in the current directory
+- [gh-home](https://github.com/sindresorhus/gh-home) - Open the GitHub page of the given or current directory repo
 
 
 ## License
