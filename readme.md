@@ -1,6 +1,6 @@
 # npm-home [![Build Status](https://travis-ci.org/sindresorhus/npm-home.svg?branch=master)](https://travis-ci.org/sindresorhus/npm-home)
 
-> Open the npm page or GitHub repo of a package
+> Open the npm page, Yarn page, or GitHub repo of a package
 
 
 ## Install
@@ -21,6 +21,7 @@ $ npm-home --help
 
   Options
     --github -g  Open the GitHub repo of the package
+    --yarn -y    Open the Yarn homepage of the package
 
   Examples
     $ npm-home

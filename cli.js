@@ -13,6 +13,7 @@ const cli = meow(`
 
 	Options
 	  --github -g  Open the GitHub repo of the package
+	  --yarn -y    Open the Yarn homepage of the package
 
 	Examples
 	  $ npm-home
@@ -22,12 +23,17 @@ const cli = meow(`
 		'github'
 	],
 	alias: {
-		g: 'github'
+		g: 'github',
+		y: 'yarn'
 	}
 });
 
 function openNpm(name) {
 	return opn(`https://www.npmjs.com/package/${name}`, {wait: false});
+}
+
+function openYarn(name) {
+	return opn(`https://yarn.pm/${name}`, {wait: false});
 }
 
 function open(name) {
@@ -40,6 +46,10 @@ function open(name) {
 
 			return openNpm(name);
 		});
+	}
+
+	if (cli.flags.yarn) {
+		return openYarn(name);
 	}
 
 	return openNpm(name);
