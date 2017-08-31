@@ -20,7 +20,8 @@ const cli = meow(`
 	  $ npm-home chalk -g
 `, {
 	boolean: [
-		'github'
+		'github',
+		'yarn'
 	],
 	alias: {
 		g: 'github',
