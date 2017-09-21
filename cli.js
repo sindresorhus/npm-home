@@ -41,7 +41,13 @@ function open(name) {
 	if (cli.flags.github) {
 		return packageJson(name, {fullMetadata: true}).then(pkg => {
 			if (pkg.repository) {
-				const url = githubUrlFromGit(pkg.repository.url);
+				const url = pkg.repository.url.startsWith('git') ? githubUrlFromGit(pkg.repository.url) : `${pkg.repository.url}`;
+
+				if (!url) {
+					console.log('Invalid repository URL, opening homepage');
+					return opn(pkg.homepage, {wait: false});
+				}
+
 				return opn(url, {wait: false});
 			}
 
