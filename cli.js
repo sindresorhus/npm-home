@@ -45,7 +45,7 @@ function open(name) {
 				const url = githubUrlFromGit(pkg.repository.url) || pkg.repository.url;
 
 				if (!urlRegex().test(url)) {
-					console.error('Invalid repository URL, opening homepage');
+					console.error('The repository URL in package.json is invalid. Open an issue on the project or create a PR with a fix. Opening homepage instead.');
 					return opn(pkg.homepage, {wait: false});
 				}
 
