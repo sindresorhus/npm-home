@@ -5,7 +5,7 @@ const readPkgUp = require('read-pkg-up');
 const opn = require('opn');
 const packageJson = require('package-json');
 const githubUrlFromGit = require('github-url-from-git');
-const urlRegex = require('url-regex');
+const isUrl = require('is-url-superb');
 
 const cli = meow(`
 	Usage
@@ -42,12 +42,13 @@ function open(name) {
 	if (cli.flags.github) {
 		return packageJson(name, {fullMetadata: true}).then(pkg => {
 			if (pkg.repository) {
-				const url = githubUrlFromGit(pkg.repository.url) || pkg.repository.url;
+				let url = githubUrlFromGit(pkg.repository.url);
 
-				if (!urlRegex().test(url)) {
+				if (!url) {
 					console.error('The repository URL in package.json is invalid. Open an issue on the project or create a PR with a fix. Opening homepage instead.');
-					return opn(pkg.homepage, {wait: false});
 				}
+
+				url = isUrl(pkg.repository.url) ? pkg.repository.url : pkg.homepage;
 
 				return opn(url, {wait: false});
 			}
