@@ -67,5 +67,10 @@ function open(name) {
 if (cli.input.length > 0) {
 	open(cli.input[0]);
 } else {
-	readPkgUp().then(x => open(x.pkg.name));
+	const pkg = readPkgUp.sync().pkg;
+
+	if (!pkg) {
+		console.error('You\'re not in an npm package');
+		process.exit(1);
+	}
 }
