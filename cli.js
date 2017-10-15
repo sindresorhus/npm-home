@@ -73,4 +73,6 @@ if (cli.input.length > 0) {
 		console.error('You\'re not in an npm package');
 		process.exit(1);
 	}
+
+	open(pkg.name);
 }
