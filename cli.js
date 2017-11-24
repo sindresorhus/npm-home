@@ -48,7 +48,7 @@ function open(name) {
 					console.error('The repository URL in package.json is invalid. Open an issue on the project or create a PR with a fix. Opening homepage instead.');
 				}
 
-				url = isUrl(pkg.repository.url) ? pkg.repository.url : pkg.homepage;
+				url = isUrl(pkg.repository.url) ? url : pkg.homepage;
 
 				return opn(url, {wait: false});
 			}
