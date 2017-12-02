@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const https = require('https');
 const meow = require('meow');
 const readPkgUp = require('read-pkg-up');
 const opn = require('opn');
@@ -31,6 +32,14 @@ const cli = meow(`
 		}
 	}
 });
+
+function isConnected() {
+	return new Promise((resolve, reject) => {
+		https.get('https://google.com', resp => {
+			resp.on('end', resolve);
+		}).on('error', reject);
+	});
+}
 
 function openNpm(name) {
 	return opn(`https://www.npmjs.com/package/${name}`, {wait: false});
@@ -72,15 +81,18 @@ function open(name) {
 	return openNpm(name);
 }
 
-if (cli.input.length > 0) {
-	open(cli.input[0]);
-} else {
-	const pkg = readPkgUp.sync().pkg;
+isConnected()
+	.then(() => {
+		if (cli.input.length > 0) {
+			open(cli.input[0]);
+		} else {
+			const pkg = readPkgUp.sync().pkg;
 
-	if (!pkg) {
-		console.error('You\'re not in an npm package');
-		process.exit(1);
-	}
+			if (!pkg) {
+				console.error('You\'re not in an npm package');
+				process.exit(1);
+			}
 
-	open(pkg.name);
-}
+			open(pkg.name);
+		}
+	}).catch(() => console.error('You\'re not connected to the internet.'));
