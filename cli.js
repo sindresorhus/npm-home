@@ -45,10 +45,16 @@ function open(name) {
 				let url = githubUrlFromGit(pkg.repository.url);
 
 				if (!url) {
-					console.error('The repository URL in package.json is invalid. Open an issue on the project or create a PR with a fix. Opening homepage instead.');
-				}
+					url = pkg.repository.url;
 
-				url = isUrl(pkg.repository.url) ? pkg.repository.url : pkg.homepage;
+					if (isUrl(url) && /^https?:\/\//.test(url)) {
+						console.error(`The \`repository\` field in package.json should point to a Git repo and not a website. Please open an issue or pull request on \`${name}\`.`);
+					} else {
+						console.error(`The \`repository\` field in package.json is invalid. Please open an issue or pull request on \`${name}\`. Using the \`homepage\` field instead.`);
+
+						url = pkg.homepage;
+					}
+				}
 
 				return opn(url, {wait: false});
 			}
