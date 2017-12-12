@@ -67,6 +67,7 @@ function open(name) {
 				console.error('No network connection detected!');
 				process.exit(1);
 			}
+
 			throw err;
 		});
 	}
