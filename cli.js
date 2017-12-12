@@ -64,10 +64,10 @@ function open(name) {
 			return openNpm(name);
 		}).catch(err => {
 			if (err.code === 'ENOTFOUND') {
-				console.error('No network connected detected!');
+				console.error('No network connection detected!');
+				process.exit(1);
 			}
-
-			process.exit(1);
+			throw err;
 		});
 	}
 
