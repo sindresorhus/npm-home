@@ -14,7 +14,7 @@
 		"nh": "cli.js"
 	},
 	"engines": {
-		"node": ">=4"
+		"node": ">=8"
 	},
 	"scripts": {
 		"test": "xo && ava"
@@ -27,7 +27,6 @@
 		"cli",
 		"npm",
 		"package",
-		"pkg",
 		"page",
 		"home",
 		"open",
@@ -42,15 +41,15 @@
 	],
 	"dependencies": {
 		"github-url-from-git": "^1.5.0",
-		"is-url-superb": "^2.0.0",
-		"meow": "^4.0.0",
-		"opn": "^5.0.0",
-		"package-json": "^4.0.1",
-		"read-pkg-up": "^3.0.0"
+		"is-url-superb": "^3.0.0",
+		"meow": "^5.0.0",
+		"open": "^6.3.0",
+		"package-json": "^6.3.0",
+		"read-pkg-up": "^6.0.0"
 	},
 	"devDependencies": {
-		"ava": "*",
-		"execa": "^0.8.0",
-		"xo": "*"
+		"ava": "^1.4.1",
+		"execa": "^1.0.0",
+		"xo": "^0.24.0"
 	}
 }

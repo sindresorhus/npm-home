@@ -2,7 +2,7 @@
 'use strict';
 const meow = require('meow');
 const readPkgUp = require('read-pkg-up');
-const opn = require('opn');
+const open = require('open');
 const packageJson = require('package-json');
 const githubUrlFromGit = require('github-url-from-git');
 const isUrl = require('is-url-superb');
@@ -32,62 +32,66 @@ const cli = meow(`
 	}
 });
 
-function openNpm(name) {
-	return opn(`https://www.npmjs.com/package/${name}`, {wait: false});
-}
+const openNpm = async name => open(`https://www.npmjs.com/package/${name}`);
+const openYarn = async name => open(`https://yarn.pm/${name}`);
 
-function openYarn(name) {
-	return opn(`https://yarn.pm/${name}`, {wait: false});
-}
+const openNpmOrYarn = cli.flags.yarn ? openYarn : openNpm;
 
-function open(name) {
+const openGitHub = async name => {
+	try {
+		const packageData = await packageJson(name, {fullMetadata: true});
+		const {repository} = packageData;
+
+		if (!repository) {
+			await openNpmOrYarn(name);
+			return;
+		}
+
+		let url = githubUrlFromGit(repository.url);
+
+		if (!url) {
+			url = repository.url;
+
+			if (isUrl(url) && /^https?:\/\//.test(url)) {
+				console.error(`The \`repository\` field in package.json should point to a Git repo and not a website. Please open an issue or pull request on \`${name}\`.`);
+			} else {
+				console.error(`The \`repository\` field in package.json is invalid. Please open an issue or pull request on \`${name}\`. Using the \`homepage\` field instead.`);
+
+				url = packageData.homepage;
+			}
+		}
+
+		await open(url);
+	} catch (error) {
+		if (error.code === 'ENOTFOUND') {
+			console.error('No network connection detected!');
+			process.exit(1);
+		}
+
+		throw error;
+	}
+};
+
+const openPackage = async name => {
 	if (cli.flags.github) {
-		return packageJson(name, {fullMetadata: true}).then(pkg => {
-			if (pkg.repository) {
-				let url = githubUrlFromGit(pkg.repository.url);
-
-				if (!url) {
-					url = pkg.repository.url;
-
-					if (isUrl(url) && /^https?:\/\//.test(url)) {
-						console.error(`The \`repository\` field in package.json should point to a Git repo and not a website. Please open an issue or pull request on \`${name}\`.`);
-					} else {
-						console.error(`The \`repository\` field in package.json is invalid. Please open an issue or pull request on \`${name}\`. Using the \`homepage\` field instead.`);
-
-						url = pkg.homepage;
-					}
-				}
-
-				return opn(url, {wait: false});
-			}
-
-			return openNpm(name);
-		}).catch(err => {
-			if (err.code === 'ENOTFOUND') {
-				console.error('No network connection detected!');
-				process.exit(1);
-			}
-
-			throw err;
-		});
+		await openGitHub(name);
+		return;
 	}
 
-	if (cli.flags.yarn) {
-		return openYarn(name);
+	await openNpmOrYarn(name);
+};
+
+(async () => {
+	if (cli.input.length > 0) {
+		await openPackage(cli.input[0]);
+	} else {
+		const result = readPkgUp.sync();
+
+		if (!result) {
+			console.error('You\'re not in an npm package');
+			process.exit(1);
+		}
+
+		await openPackage(result.package.name);
 	}
-
-	return openNpm(name);
-}
-
-if (cli.input.length > 0) {
-	open(cli.input[0]);
-} else {
-	const pkg = readPkgUp.sync().pkg;
-
-	if (!pkg) {
-		console.error('You\'re not in an npm package');
-		process.exit(1);
-	}
-
-	open(pkg.name);
-}
+})();
