@@ -1,4 +1,4 @@
-# npm-home [![Build Status](https://travis-ci.org/sindresorhus/npm-home.svg?branch=master)](https://travis-ci.org/sindresorhus/npm-home)
+# npm-home
 
 > Open the npm page, Yarn page, or GitHub repo of a package
 
