@@ -13,8 +13,9 @@
 		"npm-home": "cli.js",
 		"nh": "cli.js"
 	},
+	"type": "module",
 	"engines": {
-		"node": ">=8"
+		"node": ">=16"
 	},
 	"scripts": {
 		"test": "xo && ava"
@@ -41,15 +42,15 @@
 	],
 	"dependencies": {
 		"github-url-from-git": "^1.5.0",
-		"is-url-superb": "^3.0.0",
-		"meow": "^5.0.0",
-		"open": "^6.3.0",
-		"package-json": "^6.3.0",
-		"read-pkg-up": "^6.0.0"
+		"is-url-superb": "^6.1.0",
+		"meow": "^12.1.0",
+		"open": "^9.1.0",
+		"package-json": "^8.1.1",
+		"read-pkg-up": "^10.0.1"
 	},
 	"devDependencies": {
-		"ava": "^1.4.1",
-		"execa": "^1.0.0",
-		"xo": "^0.24.0"
+		"ava": "^5.3.1",
+		"execa": "^8.0.1",
+		"xo": "^0.56.0"
 	}
 }

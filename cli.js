@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-'use strict';
-const meow = require('meow');
-const readPkgUp = require('read-pkg-up');
-const open = require('open');
-const packageJson = require('package-json');
-const githubUrlFromGit = require('github-url-from-git');
-const isUrl = require('is-url-superb');
+import process from 'node:process';
+import meow from 'meow';
+import {readPackageUp} from 'read-pkg-up';
+import open from 'open';
+import packageJson from 'package-json';
+import githubUrlFromGit from 'github-url-from-git';
+import isUrl from 'is-url-superb';
 
 const cli = meow(`
 	Usage
@@ -13,27 +13,28 @@ const cli = meow(`
 	  $ nh [name]
 
 	Options
-	  --github -g  Open the GitHub repo of the package
-	  --yarn -y    Open the Yarn homepage of the package
+	  --github  -g  Open the GitHub repo of the package
+	  --yarn    -y  Open the Yarn homepage of the package
 
 	Examples
 	  $ npm-home
 	  $ npm-home chalk -g
 `, {
+	importMeta: import.meta,
 	flags: {
 		github: {
 			type: 'boolean',
-			alias: 'g'
+			shortFlag: 'g',
 		},
 		yarn: {
 			type: 'boolean',
-			alias: 'y'
-		}
-	}
+			shortFlag: 'y',
+		},
+	},
 });
 
 const openNpm = async name => open(`https://www.npmjs.com/package/${name}`);
-const openYarn = async name => open(`https://yarn.pm/${name}`);
+const openYarn = async name => open(`https://yarnpkg.com/package/?name=${name}`);
 
 const openNpmOrYarn = cli.flags.yarn ? openYarn : openNpm;
 
@@ -81,17 +82,15 @@ const openPackage = async name => {
 	await openNpmOrYarn(name);
 };
 
-(async () => {
-	if (cli.input.length > 0) {
-		await openPackage(cli.input[0]);
-	} else {
-		const result = readPkgUp.sync();
+if (cli.input.length > 0) {
+	await openPackage(cli.input[0]);
+} else {
+	const result = await readPackageUp();
 
-		if (!result) {
-			console.error('You\'re not in an npm package');
-			process.exit(1);
-		}
-
-		await openPackage(result.package.name);
+	if (!result) {
+		console.error('You\'re not in an npm package');
+		process.exit(1);
 	}
-})();
+
+	await openPackage(result.packageJson.name);
+}
