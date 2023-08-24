@@ -30,7 +30,3 @@ $ npm-home --help
 ## Related
 
 - [gh-home](https://github.com/sindresorhus/gh-home) - Open the GitHub page of the given or current directory repo
-
-## License
-
-MIT © [Sindre Sorhus](https://sindresorhus.com)
