@@ -1,6 +1,9 @@
 import test from 'ava';
 import {execa} from 'execa';
 
+// Tests only checks that opening doesn't return an error, not that the correct page was opened.
+// These have to be manually verified.
+
 const testCli = test.macro(async (t, args = []) => {
 	await t.notThrowsAsync(execa('./cli.js', args));
 });
