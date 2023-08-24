@@ -6,11 +6,12 @@ import open from 'open';
 import packageJson from 'package-json';
 import githubUrlFromGit from 'github-url-from-git';
 import isUrl from 'is-url-superb';
+import pMap from 'p-map';
 
 const cli = meow(`
 	Usage
-	  $ npm-home [name]
-	  $ nh [name]
+	  $ npm-home [name …]
+	  $ nh [name …]
 
 	Options
 	  --github  -g  Open the GitHub repo of the package
@@ -19,6 +20,7 @@ const cli = meow(`
 	Examples
 	  $ npm-home
 	  $ npm-home chalk -g
+	  $ npm-home execa ava -y
 `, {
 	importMeta: import.meta,
 	flags: {
@@ -73,17 +75,17 @@ const openGitHub = async name => {
 	}
 };
 
-const openPackage = async name => {
+const openPackages = async names => pMap(names, async name => {
 	if (cli.flags.github) {
 		await openGitHub(name);
 		return;
 	}
 
 	await openNpmOrYarn(name);
-};
+}, {concurrency: 5});
 
 if (cli.input.length > 0) {
-	await openPackage(cli.input[0]);
+	await openPackages(cli.input);
 } else {
 	const result = await readPackageUp();
 
@@ -92,5 +94,5 @@ if (cli.input.length > 0) {
 		process.exit(1);
 	}
 
-	await openPackage(result.packageJson.name);
+	await openPackages([result.packageJson.name]);
 }
