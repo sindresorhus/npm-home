@@ -3,15 +3,16 @@ import process from 'node:process';
 import meow from 'meow';
 import {readPackageUp} from 'read-pkg-up';
 import open from 'open';
-import packageJson from 'package-json';
+import packageJson, {PackageNotFoundError} from 'package-json';
 import githubUrlFromGit from 'github-url-from-git';
 import isUrl from 'is-url-superb';
+import logSymbols from 'log-symbols';
 import pMap from 'p-map';
 
 const cli = meow(`
 	Usage
-	  $ npm-home [name …]
-	  $ nh [name …]
+	  $ npm-home [name] […]
+	  $ nh [name] […]
 
 	Options
 	  --github  -g  Open the GitHub repo of the package
@@ -56,9 +57,9 @@ const openGitHub = async name => {
 			url = repository.url;
 
 			if (isUrl(url) && /^https?:\/\//.test(url)) {
-				console.error(`The \`repository\` field in package.json should point to a Git repo and not a website. Please open an issue or pull request on \`${name}\`.`);
+				console.error(`${logSymbols.error} The \`repository\` field in package.json should point to a Git repo and not a website. Please open an issue or pull request on \`${name}\`.`);
 			} else {
-				console.error(`The \`repository\` field in package.json is invalid. Please open an issue or pull request on \`${name}\`. Using the \`homepage\` field instead.`);
+				console.error(`${logSymbols.error} The \`repository\` field in package.json is invalid. Please open an issue or pull request on \`${name}\`. Using the \`homepage\` field instead.`);
 
 				url = packageData.homepage;
 			}
@@ -67,8 +68,15 @@ const openGitHub = async name => {
 		await open(url);
 	} catch (error) {
 		if (error.code === 'ENOTFOUND') {
-			console.error('No network connection detected!');
-			process.exit(1);
+			console.error(`${logSymbols.error} No network connection detected!`);
+			process.exitCode = 1;
+			return;
+		}
+
+		if (error instanceof PackageNotFoundError) {
+			console.error(`${logSymbols.error} ${name} - package not found!`);
+			process.exitCode = 1;
+			return;
 		}
 
 		throw error;

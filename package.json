@@ -44,6 +44,7 @@
 	"dependencies": {
 		"github-url-from-git": "^1.5.0",
 		"is-url-superb": "^6.1.0",
+		"log-symbols": "^5.1.0",
 		"meow": "^12.1.0",
 		"open": "^9.1.0",
 		"p-map": "^6.0.0",
