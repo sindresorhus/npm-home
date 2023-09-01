@@ -29,4 +29,3 @@ for (const flag of ['--yarn', '-y']) {
 	test(`named package - yarn: ${flag}`, testCli, [flag, 'chalk']);
 	test(`multiple packages - yarn: ${flag}`, testCli, [flag, 'execa', 'ava']);
 }
-
