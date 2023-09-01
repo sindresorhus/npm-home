@@ -6,6 +6,7 @@ import open from 'open';
 import packageJson, {PackageNotFoundError} from 'package-json';
 import githubUrlFromGit from 'github-url-from-git';
 import isUrl from 'is-url-superb';
+import logSymbols from 'log-symbols';
 import pMap from 'p-map';
 
 const cli = meow(`
@@ -56,9 +57,9 @@ const openGitHub = async name => {
 			url = repository.url;
 
 			if (isUrl(url) && /^https?:\/\//.test(url)) {
-				console.error(`The \`repository\` field in package.json should point to a Git repo and not a website. Please open an issue or pull request on \`${name}\`.`);
+				console.error(`${logSymbols.error} The \`repository\` field in package.json should point to a Git repo and not a website. Please open an issue or pull request on \`${name}\`.`);
 			} else {
-				console.error(`The \`repository\` field in package.json is invalid. Please open an issue or pull request on \`${name}\`. Using the \`homepage\` field instead.`);
+				console.error(`${logSymbols.error} The \`repository\` field in package.json is invalid. Please open an issue or pull request on \`${name}\`. Using the \`homepage\` field instead.`);
 
 				url = packageData.homepage;
 			}
@@ -67,13 +68,17 @@ const openGitHub = async name => {
 		await open(url);
 	} catch (error) {
 		if (error.code === 'ENOTFOUND') {
-			console.error('No network connection detected!');
-			process.exit(1);
+			console.error(`${logSymbols.error} No network connection detected!`);
+
+			process.exitCode = 1;
+			return;
 		}
 
 		if (error instanceof PackageNotFoundError) {
-			console.error(`Package \`${name}\` doesn't exist!`);
-			process.exit(1); // TODO: this is 'fail-fast' -> if invoked with multiple names, later ones won't open
+			console.error(`${logSymbols.error} ${name} - package not found!`);
+
+			process.exitCode = 1;
+			return;
 		}
 
 		throw error;

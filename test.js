@@ -20,7 +20,7 @@ for (const flag of ['--github', '-g']) {
 	test(`github - does not error on missing package: ${flag}`, async t => {
 		// https://github.com/npm/validate-npm-package-name#naming-rules
 		const {stderr} = await t.throwsAsync(execa('./cli.js', [flag, '~invalid~']));
-		t.is(stderr, 'Package `~invalid~` doesn\'t exist!');
+		t.is(stderr, '✖ ~invalid~ - package not found!');
 	});
 }
 
