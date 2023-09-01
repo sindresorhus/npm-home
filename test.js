@@ -16,6 +16,12 @@ for (const flag of ['--github', '-g']) {
 	test(`github: ${flag}`, testCli, [flag]);
 	test(`named package - github: ${flag}`, testCli, [flag, 'chalk']);
 	test(`multiple packages - github: ${flag}`, testCli, [flag, 'execa', 'ava']);
+
+	test(`github - does not error on missing package: ${flag}`, async t => {
+		// https://github.com/npm/validate-npm-package-name#naming-rules
+		const {stderr} = await t.throwsAsync(execa('./cli.js', [flag, '~invalid~']));
+		t.is(stderr, 'Package `~invalid~` doesn\'t exist!');
+	});
 }
 
 for (const flag of ['--yarn', '-y']) {
@@ -23,3 +29,4 @@ for (const flag of ['--yarn', '-y']) {
 	test(`named package - yarn: ${flag}`, testCli, [flag, 'chalk']);
 	test(`multiple packages - yarn: ${flag}`, testCli, [flag, 'execa', 'ava']);
 }
+

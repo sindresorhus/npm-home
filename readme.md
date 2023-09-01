@@ -14,8 +14,8 @@ npm install --global npm-home
 $ npm-home --help
 
   Usage
-    $ npm-home [name …]
-    $ nh [name …]
+    $ npm-home [name] […]
+    $ nh [name] […]
 
   Options
     --github -g  Open the GitHub repo of the package

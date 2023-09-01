@@ -3,15 +3,15 @@ import process from 'node:process';
 import meow from 'meow';
 import {readPackageUp} from 'read-pkg-up';
 import open from 'open';
-import packageJson from 'package-json';
+import packageJson, {PackageNotFoundError} from 'package-json';
 import githubUrlFromGit from 'github-url-from-git';
 import isUrl from 'is-url-superb';
 import pMap from 'p-map';
 
 const cli = meow(`
 	Usage
-	  $ npm-home [name …]
-	  $ nh [name …]
+	  $ npm-home [name] […]
+	  $ nh [name] […]
 
 	Options
 	  --github  -g  Open the GitHub repo of the package
@@ -69,6 +69,11 @@ const openGitHub = async name => {
 		if (error.code === 'ENOTFOUND') {
 			console.error('No network connection detected!');
 			process.exit(1);
+		}
+
+		if (error instanceof PackageNotFoundError) {
+			console.error(`Package \`${name}\` doesn't exist!`);
+			process.exit(1); // TODO: this is 'fail-fast' -> if invoked with multiple names, later ones won't open
 		}
 
 		throw error;
