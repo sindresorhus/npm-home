@@ -69,14 +69,12 @@ const openGitHub = async name => {
 	} catch (error) {
 		if (error.code === 'ENOTFOUND') {
 			console.error(`${logSymbols.error} No network connection detected!`);
-
 			process.exitCode = 1;
 			return;
 		}
 
 		if (error instanceof PackageNotFoundError) {
 			console.error(`${logSymbols.error} ${name} - package not found!`);
-
 			process.exitCode = 1;
 			return;
 		}
