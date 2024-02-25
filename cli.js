@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import process from 'node:process';
 import meow from 'meow';
-import {readPackageUp} from 'read-pkg-up';
+import {readPackageUp} from 'read-package-up';
 import open from 'open';
 import packageJson, {PackageNotFoundError} from 'package-json';
 import githubUrlFromGit from 'github-url-from-git';

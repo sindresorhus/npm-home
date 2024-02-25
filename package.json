@@ -11,12 +11,12 @@
 		"url": "https://sindresorhus.com"
 	},
 	"bin": {
-		"npm-home": "cli.js",
-		"nh": "cli.js"
+		"npm-home": "./cli.js",
+		"nh": "./cli.js"
 	},
 	"type": "module",
 	"engines": {
-		"node": ">=16"
+		"node": ">=18"
 	},
 	"scripts": {
 		"test": "xo && ava"
@@ -44,16 +44,16 @@
 	"dependencies": {
 		"github-url-from-git": "^1.5.0",
 		"is-url-superb": "^6.1.0",
-		"log-symbols": "^5.1.0",
-		"meow": "^12.1.0",
-		"open": "^9.1.0",
-		"p-map": "^6.0.0",
-		"package-json": "^8.1.1",
-		"read-pkg-up": "^10.0.1"
+		"log-symbols": "^6.0.0",
+		"meow": "^13.2.0",
+		"open": "^10.0.3",
+		"p-map": "^7.0.1",
+		"package-json": "^10.0.0",
+		"read-package-up": "^11.0.0"
 	},
 	"devDependencies": {
-		"ava": "^5.3.1",
+		"ava": "^6.1.1",
 		"execa": "^8.0.1",
-		"xo": "^0.56.0"
+		"xo": "^0.57.0"
 	}
 }
