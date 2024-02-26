@@ -1,6 +1,6 @@
 {
 	"name": "npm-home",
-	"version": "3.0.1",
+	"version": "4.0.0",
 	"description": "Open the npm page, Yarn page, or GitHub repo of a package",
 	"license": "MIT",
 	"repository": "sindresorhus/npm-home",
