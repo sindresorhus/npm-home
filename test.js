@@ -45,7 +45,7 @@ const testCli = test.macro(async (t, {arguments_ = [], packageJson, urls: expect
 	});
 
 	const {flatCalls: urls} = tq.explain(openSpy);
-	t.deepEqual(urls.sort(), expectedUrls.sort());
+	t.deepEqual(urls.sort(), expectedUrls.sort()); // Unordered equal to account for concurrent calls
 
 	const {flatCalls: logs} = tq.explain(logger);
 	t.deepEqual(logs, warnings);
