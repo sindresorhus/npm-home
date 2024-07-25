@@ -22,6 +22,11 @@ for (const flag of ['--github', '-g']) {
 		const {stderr} = await t.throwsAsync(execa('./cli.js', [flag, '~invalid~']));
 		t.is(stderr, '✖ ~invalid~ - package not found!');
 	});
+
+	test(`github - invalid repository warning: ${flag}`, async t => {
+		const {stderr} = await execa('./cli.js', [flag, 'babel-preset-minify']); // From #5
+		t.is(stderr, '✖ The `repository` field in package.json should point to a Git repo and not a website. Please open an issue or pull request on `babel-preset-minify`.');
+	});
 }
 
 for (const flag of ['--yarn', '-y']) {

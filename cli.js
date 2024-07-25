@@ -4,8 +4,7 @@ import meow from 'meow';
 import {readPackageUp} from 'read-package-up';
 import open from 'open';
 import packageJson, {PackageNotFoundError} from 'package-json';
-import githubUrlFromGit from 'github-url-from-git';
-import isUrl from 'is-url-superb';
+import repoUrlFromPackage from 'repo-url-from-package';
 import logSymbols from 'log-symbols';
 import pMap from 'p-map';
 
@@ -51,21 +50,23 @@ const openGitHub = async name => {
 			return;
 		}
 
-		let url = githubUrlFromGit(repository.url);
+		const {url, warnings} = repoUrlFromPackage(packageData);
 
-		if (!url) {
-			url = repository.url;
-
-			if (isUrl(url) && /^https?:\/\//.test(url)) {
-				console.error(`${logSymbols.error} The \`repository\` field in package.json should point to a Git repo and not a website. Please open an issue or pull request on \`${name}\`.`);
-			} else {
-				console.error(`${logSymbols.error} The \`repository\` field in package.json is invalid. Please open an issue or pull request on \`${name}\`. Using the \`homepage\` field instead.`);
-
-				url = packageData.homepage;
-			}
+		for (const warning of warnings) {
+			console.error(`${logSymbols.error} ${warning}`);
 		}
 
-		await open(url);
+		if (url) {
+			await open(url);
+			return;
+		}
+
+		if (packageData.homepage) {
+			console.log(`${logSymbols.warning} Falling back to \`homepage\` field.`);
+			await open(packageData.homepage);
+		} else {
+			console.error(`${logSymbols.error} No \`repository\` or \`homepage\` field found in package.json. Please open an issue or pull request on ${name}`);
+		}
 	} catch (error) {
 		if (error.code === 'ENOTFOUND') {
 			console.error(`${logSymbols.error} No network connection detected!`);
