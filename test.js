@@ -107,6 +107,12 @@ for (const flag of ['--github', '-g']) {
 			'⚠ Falling back to `homepage` field.',
 		],
 	});
+
+	test(`github - no repository: ${flag}`, testCli, {
+		arguments_: [flag, 'foo'],
+		packageJson: {name: 'foo'},
+		urls: ['https://www.npmjs.com/package/foo'],
+	});
 }
 
 for (const flag of ['--yarn', '-y']) {
