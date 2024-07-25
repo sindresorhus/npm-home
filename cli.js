@@ -4,8 +4,7 @@ import meow from 'meow';
 import {readPackageUp} from 'read-package-up';
 import open from 'open';
 import packageJson, {PackageNotFoundError} from 'package-json';
-import githubUrlFromGit from 'github-url-from-git';
-import isUrl from 'is-url-superb';
+import repoUrlFromPackage from 'repo-url-from-package';
 import logSymbols from 'log-symbols';
 import pMap from 'p-map';
 
@@ -51,18 +50,15 @@ const openGitHub = async name => {
 			return;
 		}
 
-		let url = githubUrlFromGit(repository.url);
+		const {url = packageData.homepage, warnings} = repoUrlFromPackage(packageData);
+
+		for (const warning of warnings) {
+			console.error(`${logSymbols.warning} ${warning}`);
+		}
 
 		if (!url) {
-			url = repository.url;
-
-			if (isUrl(url) && /^https?:\/\//.test(url)) {
-				console.error(`${logSymbols.error} The \`repository\` field in package.json should point to a Git repo and not a website. Please open an issue or pull request on \`${name}\`.`);
-			} else {
-				console.error(`${logSymbols.error} The \`repository\` field in package.json is invalid. Please open an issue or pull request on \`${name}\`. Using the \`homepage\` field instead.`);
-
-				url = packageData.homepage;
-			}
+			console.error(`${logSymbols.error} No \`homepage\` field found in package.json.`);
+			return;
 		}
 
 		await open(url);
