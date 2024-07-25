@@ -2,10 +2,14 @@ import test from 'ava';
 import {execa} from 'execa';
 import * as tq from 'test-quadruple';
 
-test('main - opens npm-home', async t => {
+const testOpen = test.macro(async (t, assertions) => {
 	t.log('This test only checks that opening doesn\'t return an error, not that the correct page was opened.');
 	t.log('That has to be manually verified.');
 
+	await assertions(t);
+});
+
+test('main - opens npm-home', testOpen, async t => {
 	await t.notThrowsAsync(execa('./cli.js'));
 });
 
@@ -27,7 +31,7 @@ const testCli = test.macro(async (t, {arguments_ = [], packageJson, urls: expect
 		importMeta: import.meta,
 		localMocks: {
 			open: openSpy,
-			import: {console: {error: logger}},
+			import: {console: {error: logger, log: logger}},
 			...packageJson && {
 				'package-json': tq.resolves(packageJson),
 			},
@@ -85,14 +89,9 @@ for (const flag of ['--github', '-g']) {
 		t.is(stderr, '✖ ~invalid~ - package not found!');
 	});
 
-	test(`github - warns on non-git repository: ${flag}`, testCli, {
-		arguments_: [flag, 'foo'],
-		packageJson: {
-			name: 'foo',
-			repository: {url: 'https://example.com'},
-		},
-		urls: ['https://example.com'],
-		warnings: ['✖ The `repository` field in package.json should point to a Git repo and not a website. Please open an issue or pull request on `foo`.'],
+	test(`github - invalid repository warning: ${flag}`, testOpen, async t => {
+		const {stderr} = await execa('./cli.js', [flag, 'babel-preset-minify']); // From #5
+		t.is(stderr, '✖ The `repository` field in package.json should point to a Git repo and not a website. Please open an issue or pull request on `babel-preset-minify`.');
 	});
 
 	test(`github - falls back to homepage and warns on invalid repository URL: ${flag}`, testCli, {
@@ -103,7 +102,10 @@ for (const flag of ['--github', '-g']) {
 			homepage: 'https://example.com',
 		},
 		urls: ['https://example.com'],
-		warnings: ['✖ The `repository` field in package.json is invalid. Please open an issue or pull request on `foo`. Using the `homepage` field instead.'],
+		warnings: [
+			'✖ The `repository` field in package.json is invalid. Please open an issue or pull request on `foo`.',
+			'⚠ Falling back to `homepage` field.',
+		],
 	});
 }
 
