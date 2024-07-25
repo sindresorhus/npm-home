@@ -50,18 +50,23 @@ const openGitHub = async name => {
 			return;
 		}
 
-		const {url = packageData.homepage, warnings} = repoUrlFromPackage(packageData);
+		const {url, warnings} = repoUrlFromPackage(packageData);
 
 		for (const warning of warnings) {
 			console.error(`${logSymbols.error} ${warning}`);
 		}
 
-		if (!url) {
-			console.error(`${logSymbols.error} No \`homepage\` field found in package.json.`);
+		if (url) {
+			await open(url);
 			return;
 		}
 
-		await open(url);
+		if (packageData.homepage) {
+			console.log(`${logSymbols.warning} Falling back to \`homepage\` field.`);
+			await open(packageData.homepage);
+		} else {
+			console.error(`${logSymbols.error} No \`repository\` or \`homepage\` field found in package.json. Please open an issue or pull request on ${name}`);
+		}
 	} catch (error) {
 		if (error.code === 'ENOTFOUND') {
 			console.error(`${logSymbols.error} No network connection detected!`);
