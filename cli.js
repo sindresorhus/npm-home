@@ -53,7 +53,7 @@ const openGitHub = async name => {
 		const {url = packageData.homepage, warnings} = repoUrlFromPackage(packageData);
 
 		for (const warning of warnings) {
-			console.error(`${logSymbols.warning} ${warning}`);
+			console.error(`${logSymbols.error} ${warning}`);
 		}
 
 		if (!url) {
